@@ -1,22 +1,20 @@
 generator client {
     provider = "prisma-client-js"
-    output   = "../src/generated/prisma"
 }
 
 datasource db {
-    provider = "postgresql"
+    provider = "mongodb"
     url      = env("DATABASE_URL")
 }
 
 model User {
-    id        String   @id @default(uuid())
+    id        String    @id @default(auto()) @map("_id") @db.ObjectId
     username  String
     password  String
-    email     String   @unique
-    createdAt DateTime @default(now())
-
-    notes Content[]
-    Link  Link[]
+    email     String    @unique
+    createdAt DateTime  @default(now())
+    content   Content[]
+    link      Link[]
 }
 
 enum ContentType {
@@ -27,7 +25,7 @@ enum ContentType {
 }
 
 model Content {
-    id          String      @id @default(uuid())
+    id          String      @id @default(auto()) @map("_id") @db.ObjectId
     title       String
     contentType ContentType @default(ARTICLE)
     link        String
@@ -36,24 +34,37 @@ model Content {
     createdAt   DateTime    @default(now())
     updatedAt   DateTime    @updatedAt
 
-    userId String
-    user   User   @relation(fields: [userId], references: [id])
+    userId String? @db.ObjectId
+    User   User?   @relation(fields: [userId], references: [id])
 
-    tags Tag[] @relation("ContentTags")
+    contentTags ContentTag[] // relation to join model
 }
 
 model Tag {
-    id        String   @id @default(uuid())
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
     title     String   @unique
     createdAt DateTime @default(now())
 
-    contents Content[] @relation("ContentTags")
+    contentTags ContentTag[] // relation to join model
+}
+
+model ContentTag {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    content   Content @relation(fields: [contentId], references: [id])
+    contentId String  @db.ObjectId
+
+    tag   Tag    @relation(fields: [tagId], references: [id])
+    tagId String @db.ObjectId
+
+    createdAt DateTime @default(now())
 }
 
 model Link {
-    id        String   @id @default(uuid())
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
     hash      String
     createdAt DateTime @default(now())
-    userId    String
-    user      User     @relation(fields: [userId], references: [id])
+
+    userId String? @db.ObjectId
+    User   User?   @relation(fields: [userId], references: [id])
 }
