@@ -1,0 +1,59 @@
+generator client {
+    provider = "prisma-client-js"
+    output   = "../src/generated/prisma"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id        String   @id @default(uuid())
+    username  String
+    password  String
+    email     String   @unique
+    createdAt DateTime @default(now())
+
+    notes Content[]
+    Link  Link[]
+}
+
+enum ContentType {
+    IMAGE
+    AUDIO
+    ARTICLE
+    VIDEO
+}
+
+model Content {
+    id          String      @id @default(uuid())
+    title       String
+    contentType ContentType @default(ARTICLE)
+    link        String
+    share       Boolean     @default(false)
+    pinned      Boolean     @default(false)
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id])
+
+    tags Tag[] @relation("ContentTags")
+}
+
+model Tag {
+    id        String   @id @default(uuid())
+    title     String   @unique
+    createdAt DateTime @default(now())
+
+    contents Content[] @relation("ContentTags")
+}
+
+model Link {
+    id        String   @id @default(uuid())
+    hash      String
+    createdAt DateTime @default(now())
+    userId    String
+    user      User     @relation(fields: [userId], references: [id])
+}
