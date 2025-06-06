@@ -1,4 +1,3 @@
-import { NamedSet } from "./../../node_modules/zustand/middleware/devtools.d"
 import { atomWithStorage } from "jotai/utils"
 
 export type User = {

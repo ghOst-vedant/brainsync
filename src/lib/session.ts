@@ -4,6 +4,7 @@ import { db } from "@/lib/prisma"
 import { cookies } from "next/headers"
 import { jwtVerify, SignJWT } from "jose"
 import { SessionPayload } from "./definitions"
+import { redirect } from "next/navigation"
 
 const key = new TextEncoder().encode(process.env.JWT_SECRET)
 
@@ -22,7 +23,6 @@ export async function decrypt(session: string | undefined = "") {
         })
         return payload
     } catch (error) {
-        console.log("Failed to verify session")
         return null
     }
 }
@@ -50,15 +50,15 @@ export async function createSession(userId: string) {
     })
 }
 
-export async function verifySession() {
-    const cookie = (await cookies()).get("session")?.value
-    const session = await decrypt(cookie)
-    if (!session?.sessionId || !session.userId) {
-        console.log("Session is invalid or expired")
-        redirect("/login")
-    }
-    return { isAuth: true, userId: session.userId }
-}
+// export async function verifySession() {
+//     const cookie = (await cookies()).get("session")?.value
+//     const session = await decrypt(cookie)
+//     if (!session?.sessionId || !session.userId) {
+//         console.log("Session is invalid or expired")
+//         redirect("/login")
+//     }
+//     return { isAuth: true, userId: session.userId }
+// }
 
 export async function getSession() {
     const cookieStore = await cookies()
@@ -75,5 +75,10 @@ export async function getSession() {
 
 export async function deleteSession() {
     const cookieStore = await cookies()
+    const session = await getSession()
+    const sessionId = session?.sessionId
+    await db.session.delete({
+        where: { id: sessionId },
+    })
     cookieStore.delete("session")
 }

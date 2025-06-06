@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
         const formdata = await req.formData()
         const username = formdata.get("username")
         const email = formdata.get("email")
-        const password = formdata.get("password")
+        const password = formdata.get("confirmPassword")
         const data = { username, email, password }
         const parsed = signUpSchema.safeParse(data)
         if (!parsed.success) {

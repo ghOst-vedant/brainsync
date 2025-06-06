@@ -5,7 +5,7 @@ import { createSession } from "@/lib/session"
 import { userAtom } from "@/store/useAuthStore"
 import { useAtom } from "jotai"
 import { useRouter } from "next/navigation"
-import React, { useActionState, useState } from "react"
+import React, { useState } from "react"
 
 import { useFormStatus } from "react-dom"
 
@@ -21,7 +21,6 @@ const LoginForm = () => {
             body: formData,
         })
         const data = await response.json()
-        console.log(data)
 
         if (response.ok) {
             setUser(data.user) // <-- store user in Zustand
@@ -31,9 +30,9 @@ const LoginForm = () => {
         }
     }
     return (
-        <main className="md:w-full w-full max-w-md flex flex-col gap-8 items-center justify-center p-8 border dark:border-gray-700 rounded-xl shadow-lg ">
+        <main className="w-full max-w-md flex flex-col gap-8 items-center justify-center p-8 border dark:border-gray-700 rounded-xl shadow-lg ">
             <h1 className="text-2xl font-bold text-center">Login</h1>
-            <p className="text-gray-600 dark:text-gray-400 text-center text-xl">
+            <p className="text-gray-600 dark:text-gray-400 text-center text-lg">
                 Please enter your username and password to login.
             </p>
             <form
@@ -65,7 +64,7 @@ const LoginForm = () => {
                         required
                     />
                 </div>
-                {error && <p>{error}</p>}
+                {error && <p className="text-red">{error}</p>}
                 <SubmitButton />
             </form>
         </main>

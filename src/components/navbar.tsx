@@ -10,7 +10,7 @@ import { useAtom } from "jotai"
 import { Loader2 } from "lucide-react"
 import { useTheme } from "next-themes"
 
-const Navbar = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
+const Navbar = () => {
     const { theme } = useTheme()
     const router = useRouter()
     const [user, setUser] = useAtom(userAtom)
@@ -18,13 +18,16 @@ const Navbar = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
     useEffect(() => {
         setIsHydrated(true)
     }, [])
-
+    // useEffect(() => {
+    //     if (!user) {
+    //         router.push("/login")
+    //     }
+    // }, [user])
     const handleLogout = async () => {
         await logout()
         setUser(null)
         router.push("/login")
     }
-    console.log(user)
 
     return (
         <div>
