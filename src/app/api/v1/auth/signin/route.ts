@@ -2,6 +2,8 @@ import { signInSchema, signUpSchema } from "@/lib/zod"
 import { NextRequest, NextResponse } from "next/server"
 import bcrypt from "bcrypt"
 import { db } from "@/lib/prisma"
+import { create } from "domain"
+import { createSession } from "@/lib/session"
 
 export async function POST(req: NextRequest) {
     try {
@@ -32,11 +34,11 @@ export async function POST(req: NextRequest) {
                 { status: 401 }
             )
         }
-
+        await createSession(user.id)
         return NextResponse.json(
             {
                 message: "Sign-in successful.",
-                user: { id: user.id, email: user.email },
+                user: { id: user.id, name: user.username, email: user.email },
             },
             { status: 200 }
         )
