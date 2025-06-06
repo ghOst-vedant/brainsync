@@ -9,6 +9,19 @@ import { userAtom } from "@/store/useAuthStore"
 import { useAtom } from "jotai"
 import { Loader2 } from "lucide-react"
 import { useTheme } from "next-themes"
+import Link from "next/link"
+import {
+    DM_Serif_Display,
+    Inter,
+    Montserrat,
+    Noto_Sans,
+} from "next/font/google"
+
+const DM_400 = DM_Serif_Display({
+    variable: "--font-dm-serif",
+    subsets: ["latin"],
+    weight: "400",
+})
 
 const Navbar = () => {
     const { theme } = useTheme()
@@ -32,10 +45,15 @@ const Navbar = () => {
     return (
         <div>
             <nav className="flex items-center justify-between p-6 shadow-xl ">
-                <div className="text-lg font-bold">BrainSync</div>
+                <Link
+                    className={`text-2xl font-bold cursor-pointer ${DM_400.className}   text-gray-900 dark:text-gray-100`}
+                    href={"/"}
+                >
+                    BrainSync
+                </Link>
                 <ul className="flex space-x-4 items-center justify-center">
                     <li>
-                        <a href="/" className="hover:underline">
+                        <a href="/" className={`hover:underline `}>
                             Home
                         </a>
                     </li>
