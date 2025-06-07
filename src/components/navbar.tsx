@@ -10,12 +10,8 @@ import { useAtom } from "jotai"
 import { Loader2 } from "lucide-react"
 import { useTheme } from "next-themes"
 import Link from "next/link"
-import {
-    DM_Serif_Display,
-    Inter,
-    Montserrat,
-    Noto_Sans,
-} from "next/font/google"
+import { DM_Serif_Display } from "next/font/google"
+import AuthButtons from "./AuthButtons"
 
 const DM_400 = DM_Serif_Display({
     variable: "--font-dm-serif",
@@ -52,7 +48,7 @@ const Navbar = () => {
                     BrainSync
                 </Link>
                 <ul className="flex space-x-4 items-center justify-center">
-                    <li>
+                    {/* <li>
                         <a href="/" className={`hover:underline `}>
                             Home
                         </a>
@@ -61,8 +57,8 @@ const Navbar = () => {
                         <a href="/about" className="hover:underline">
                             About
                         </a>
-                    </li>
-                    <li>
+                    </li> */}
+                    {/* <li>
                         {!isHydrated ? (
                             <Button disabled variant="outline">
                                 <Loader2 className="animate-spin h-4 w-4 mr-2" />
@@ -87,6 +83,9 @@ const Navbar = () => {
                                 <a href="/login">Login</a>
                             </Button>
                         )}
+                    </li> */}
+                    <li>
+                        <AuthButtons />
                     </li>
                     <li>
                         <ModeToggle />
