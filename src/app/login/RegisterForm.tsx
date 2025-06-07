@@ -1,14 +1,12 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useRouter } from "next/navigation"
-import React, { FormEvent, useState } from "react"
+import { FormEvent, useState } from "react"
 
 const RegisterForm = ({
     setIsRegistering,
 }: {
     setIsRegistering: (value: boolean) => void
 }) => {
-    const router = useRouter()
     const [error, setError] = useState<string | null>(null)
     const handleRegister = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -25,7 +23,7 @@ const RegisterForm = ({
         }
     }
     return (
-        <main className="w-[40%] flex flex-col gap-8 items-center justify-center p-8 border dark:border-gray-700 rounded-xl shadow-lg ">
+        <main className="md:w-[40%] w-[100%] flex flex-col gap-8 items-center justify-center p-8 border dark:border-gray-700 rounded-xl shadow-lg ">
             <h1 className="text-2xl font-bold text-center">Register</h1>
             <p className="text-gray-600 dark:text-gray-400 text-center text-lg">
                 Please enter your details to create an account.
@@ -35,7 +33,7 @@ const RegisterForm = ({
                 action="#"
                 onSubmit={handleRegister}
             >
-                <div className="flex gap-4">
+                <div className="flex md:flex-row flex-col gap-4">
                     <div className="flex flex-col gap-4 w-full">
                         <label
                             htmlFor="username"
@@ -65,7 +63,7 @@ const RegisterForm = ({
                         />
                     </div>
                 </div>
-                <div className="flex gap-4 ">
+                <div className="flex md:flex-row flex-col gap-4 ">
                     <div className="flex flex-col gap-4 w-full">
                         <label
                             htmlFor="password"

@@ -1,16 +1,10 @@
 import type { Metadata } from "next"
-import {
-    Geist,
-    Geist_Mono,
-    Inter,
-    Montserrat,
-    Noto_Sans,
-    Raleway,
-} from "next/font/google"
+import { Raleway } from "next/font/google"
 import "./globals.css"
-import Navbar from "@/components/navbar"
+
 import { ThemeProvider } from "next-themes"
 import { getSession } from "@/lib/session"
+import NavbarWrapper from "@/components/NavbarWrapper"
 
 const inter = Raleway({
     variable: "--font-raleway",
@@ -31,7 +25,7 @@ export default async function RootLayout({
         <html lang="en" suppressHydrationWarning>
             <body className={`antialiased ${inter.className}`}>
                 <ThemeProvider attribute={"class"} enableSystem>
-                    {!session && <Navbar />}
+                    {!session ? <NavbarWrapper /> : null}
                     {children}
                 </ThemeProvider>
             </body>

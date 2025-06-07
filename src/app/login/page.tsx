@@ -1,13 +1,12 @@
 "use client"
-import React, { useState } from "react"
+import { useState } from "react"
 import LoginForm from "./LoginForm"
 import RegisterForm from "./RegisterForm"
 
 const page = () => {
-    const [page, setPage] = useState("login")
     const [isRegistering, setIsRegistering] = useState(false)
     return (
-        <div className="flex m-auto items-center justify-center  p-8 pb-20 gap-16  font-[family-name:var(--font-geist-sans)]">
+        <div className="flex m-auto items-center justify-center  md:px-8 px-6 pt-8 md:pt-16 pb-20 gap-16  font-[family-name:var(--font-geist-sans)]">
             <main className="flex flex-col gap-[32px] items-center w-full">
                 <div className="flex flex-col gap-4">
                     <h1 className="text-3xl font-bold text-center">Welcome</h1>

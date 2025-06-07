@@ -1,10 +1,6 @@
 import { AppSidebar } from "@/components/Custom-Slidebar/AppSidebar"
 import { CustomTriggerOutside } from "@/components/Custom-Slidebar/CustomTrigger"
-import {
-    SidebarInset,
-    SidebarProvider,
-    SidebarTrigger,
-} from "@/components/ui/sidebar"
+import { SidebarProvider } from "@/components/ui/sidebar"
 import { getSession } from "@/lib/session"
 import { redirect } from "next/navigation"
 export default async function LoggedInLayout({

@@ -21,10 +21,16 @@ const AuthButtons = () => {
     }, [])
 
     const handleLogout = async () => {
-        await logout()
         setUser(null)
+        await logout()
         router.push("/login")
     }
+
+    useEffect(() => {
+        if (isHydrated && user === null) {
+            router.push("/login")
+        }
+    }, [user, isHydrated, router])
 
     if (!isHydrated) {
         return (
