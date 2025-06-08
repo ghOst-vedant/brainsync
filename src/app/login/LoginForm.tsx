@@ -1,11 +1,11 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { createSession } from "@/lib/session"
+
 import { userAtom } from "@/store/useAuthStore"
 import { useAtom } from "jotai"
 import { useRouter } from "next/navigation"
-import React, { useState } from "react"
+import { useState } from "react"
 
 import { useFormStatus } from "react-dom"
 
@@ -36,7 +36,7 @@ const LoginForm = () => {
                 Please enter your username and password to login.
             </p>
             <form
-                action="#"
+                action="javascript:void(0)"
                 className="flex flex-col gap-6 w-full max-w-md "
                 onSubmit={handleSubmit}
             >

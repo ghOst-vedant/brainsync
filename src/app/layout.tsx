@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
-import { Raleway } from "next/font/google"
+import {
+    Raleway,
+} from "next/font/google"
 import "./globals.css"
 
 import { ThemeProvider } from "next-themes"
