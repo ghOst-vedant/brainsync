@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "./ui/button"
+import { Button } from "../ui/button"
 import { Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { logout } from "./navBarActions"
@@ -23,7 +23,7 @@ const AuthButtons = () => {
     const handleLogout = async () => {
         setUser(null)
         await logout()
-        router.push("/login")
+        router.refresh()
     }
 
     useEffect(() => {

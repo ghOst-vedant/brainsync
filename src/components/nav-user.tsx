@@ -26,7 +26,7 @@ import {
     useSidebar,
 } from "@/components/ui/sidebar"
 import { User, userAtom } from "@/store/useAuthStore"
-import { logout } from "./navBarActions"
+import { logout } from "./Landing-page/navBarActions"
 import { useRouter } from "next/navigation"
 import { useAtom } from "jotai"
 
@@ -38,7 +38,7 @@ export function NavUser({ user }: { user: User }) {
     const handleLogout = async () => {
         setUser(null)
         await logout()
-        router.replace("/login")
+        router.refresh()
     }
 
     return (
