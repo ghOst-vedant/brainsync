@@ -8,14 +8,15 @@ datasource db {
 }
 
 model User {
-    id        String    @id @default(auto()) @map("_id") @db.ObjectId
-    username  String
-    password  String
-    email     String    @unique
-    createdAt DateTime  @default(now())
-    notes     Content[]
-    links     Link[]
-    Sessions  Session[]
+    id           String         @id @default(auto()) @map("_id") @db.ObjectId
+    username     String
+    password     String
+    email        String         @unique
+    createdAt    DateTime       @default(now())
+    notes        Content[]
+    links        Link[]
+    Sessions     Session[]
+    Collaborator Collaborator[]
 }
 
 enum ContentType {
@@ -47,6 +48,7 @@ model Tag {
     createdAt DateTime @default(now())
 
     contentTags ContentTag[] // relation to join model
+    FileTag     FileTag[]
 }
 
 model ContentTag {
@@ -76,4 +78,70 @@ model Session {
     user      User     @relation(fields: [userId], references: [id])
     createdAt DateTime @default(now())
     expiresAt DateTime
+}
+
+model Workspace {
+    id             String         @id @default(auto()) @map("_id") @db.ObjectId
+    createdAt      DateTime       @default(now())
+    workspaceOwner String         @db.ObjectId // user ID of the owner
+    title          String
+    iconId         String
+    data           String?
+    inTrash        String?
+    logo           String?
+    bannerUrl      String?
+    Folder         Folder[]
+    File           File[]
+    Collaborator   Collaborator[]
+}
+
+model Collaborator {
+    id          String   @id @default(auto()) @map("_id") @db.ObjectId
+    workspaceId String   @db.ObjectId
+    userId      String   @db.ObjectId
+    createdAt   DateTime @default(now())
+
+    Workspace Workspace @relation(fields: [workspaceId], references: [id])
+    User      User      @relation(fields: [userId], references: [id])
+}
+
+model Folder {
+    id          String   @id @default(auto()) @map("_id") @db.ObjectId
+    createdAt   DateTime @default(now())
+    title       String
+    iconId      String
+    data        String?
+    inTrash     String?
+    bannerUrl   String?
+    workspaceId String   @db.ObjectId
+
+    Workspace Workspace @relation(fields: [workspaceId], references: [id])
+    File      File[]
+}
+
+model File {
+    id          String   @id @default(auto()) @map("_id") @db.ObjectId
+    createdAt   DateTime @default(now())
+    title       String
+    iconId      String
+    data        String?
+    inTrash     String?
+    bannerUrl   String?
+    workspaceId String   @db.ObjectId
+    folderId    String   @db.ObjectId
+
+    Workspace Workspace @relation(fields: [workspaceId], references: [id])
+    Folder    Folder    @relation(fields: [folderId], references: [id])
+
+    fileTags FileTag[]
+}
+
+model FileTag {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    fileId    String   @db.ObjectId
+    tagId     String   @db.ObjectId
+    createdAt DateTime @default(now())
+
+    File File @relation(fields: [fileId], references: [id])
+    Tag  Tag  @relation(fields: [tagId], references: [id])
 }
