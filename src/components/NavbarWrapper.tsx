@@ -8,7 +8,7 @@ import { userAtom } from "@/store/useAuthStore"
 
 export default function NavbarWrapper() {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
-    const [user, setUser] = useAtom(userAtom)
+    const [user] = useAtom(userAtom)
     useEffect(() => {
         const checkSession = async () => {
             const session = await getSession()
