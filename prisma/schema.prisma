@@ -13,54 +13,16 @@ model User {
     password     String
     email        String         @unique
     createdAt    DateTime       @default(now())
-    notes        Content[]
     links        Link[]
     Sessions     Session[]
     Collaborator Collaborator[]
 }
 
-enum ContentType {
-    IMAGE
-    AUDIO
-    ARTICLE
-    VIDEO
-}
-
-model Content {
-    id          String      @id @default(auto()) @map("_id") @db.ObjectId
-    title       String
-    contentType ContentType @default(ARTICLE)
-    link        String
-    share       Boolean     @default(false)
-    pinned      Boolean     @default(false)
-    createdAt   DateTime    @default(now())
-    updatedAt   DateTime    @updatedAt
-
-    userId String? @db.ObjectId
-    User   User?   @relation(fields: [userId], references: [id])
-
-    contentTags ContentTag[] // relation to join model
-}
-
 model Tag {
-    id        String   @id @default(auto()) @map("_id") @db.ObjectId
-    title     String   @unique
-    createdAt DateTime @default(now())
-
-    contentTags ContentTag[] // relation to join model
-    FileTag     FileTag[]
-}
-
-model ContentTag {
-    id String @id @default(auto()) @map("_id") @db.ObjectId
-
-    content   Content @relation(fields: [contentId], references: [id])
-    contentId String  @db.ObjectId
-
-    tag   Tag    @relation(fields: [tagId], references: [id])
-    tagId String @db.ObjectId
-
-    createdAt DateTime @default(now())
+    id        String    @id @default(auto()) @map("_id") @db.ObjectId
+    title     String    @unique
+    createdAt DateTime  @default(now())
+    FileTag   FileTag[]
 }
 
 model Link {
