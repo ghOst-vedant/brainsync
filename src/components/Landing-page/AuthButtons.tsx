@@ -7,11 +7,9 @@ import { logout } from "./navBarActions"
 import { userAtom } from "@/store/useAuthStore"
 import { useAtom } from "jotai"
 import { useEffect, useState } from "react"
-import { useTheme } from "next-themes"
 import Link from "next/link"
 
 const AuthButtons = () => {
-    const { theme } = useTheme()
     const router = useRouter()
     const [user, setUser] = useAtom(userAtom)
     const [isHydrated, setIsHydrated] = useState(false)
@@ -42,19 +40,11 @@ const AuthButtons = () => {
     }
 
     return user ? (
-        <Button
-            variant={theme === "dark" ? "outline" : "default"}
-            className="w-full"
-            onClick={handleLogout}
-        >
+        <Button className="w-full" onClick={handleLogout}>
             Logout
         </Button>
     ) : (
-        <Button
-            asChild
-            variant={theme === "dark" ? "outline" : "default"}
-            className="w-full"
-        >
+        <Button asChild className="w-full">
             <Link href="/login">Login</Link>
         </Button>
     )
