@@ -33,8 +33,9 @@ export const getSubscriptionDetails = async (userId: string) => {
         }
         return subscription
     } catch (error) {
-        console.log(error)
-        return
+        console.log("Error fetching subscription: ", error)
+
+        return null
     }
 }
 
