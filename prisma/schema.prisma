@@ -7,15 +7,38 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+enum PricingType {
+    RECURRING
+    ONE_TIME
+}
+
+enum PricingPlanInterval {
+    YEAR
+    MONTH
+    WEEK
+    DAY
+}
+
+enum SubscriptionStatus {
+    UNPAID
+    PAST_DUE
+    INCOMPLETE_EXPIRED
+    INCOMPLETE
+    CANCELED
+    ACTIVE
+    TRIALING
+}
+
 model User {
     id           String         @id @default(auto()) @map("_id") @db.ObjectId
     username     String
     password     String
     email        String         @unique
     createdAt    DateTime       @default(now())
-    links        Link[]
-    Sessions     Session[]
-    Collaborator Collaborator[]
+    // links        Link[]
+    // Sessions     Session[]
+    // Collaborator Collaborator[]
+    // Subscription Subscription[]
 }
 
 model Tag {
@@ -31,13 +54,13 @@ model Link {
     createdAt DateTime @default(now())
 
     userId String? @db.ObjectId
-    User   User?   @relation(fields: [userId], references: [id])
+    // User   User?   @relation(fields: [userId], references: [id])
 }
 
 model Session {
     id        String   @id @default(auto()) @map("_id") @db.ObjectId
     userId    String   @db.ObjectId
-    user      User     @relation(fields: [userId], references: [id])
+    // user      User     @relation(fields: [userId], references: [id])
     createdAt DateTime @default(now())
     expiresAt DateTime
 }
@@ -52,9 +75,9 @@ model Workspace {
     inTrash        String?
     logo           String?
     bannerUrl      String?
-    Folder         Folder[]
-    File           File[]
-    Collaborator   Collaborator[]
+    // Folder         Folder[]
+    // File           File[]
+    // Collaborator   Collaborator[]
 }
 
 model Collaborator {
@@ -63,8 +86,8 @@ model Collaborator {
     userId      String   @db.ObjectId
     createdAt   DateTime @default(now())
 
-    Workspace Workspace @relation(fields: [workspaceId], references: [id])
-    User      User      @relation(fields: [userId], references: [id])
+    // Workspace Workspace @relation(fields: [workspaceId], references: [id])
+    // User      User      @relation(fields: [userId], references: [id])
 }
 
 model Folder {
@@ -77,8 +100,8 @@ model Folder {
     bannerUrl   String?
     workspaceId String   @db.ObjectId
 
-    Workspace Workspace @relation(fields: [workspaceId], references: [id])
-    File      File[]
+    // Workspace Workspace @relation(fields: [workspaceId], references: [id])
+    // File      File[]
 }
 
 model File {
@@ -92,10 +115,10 @@ model File {
     workspaceId String   @db.ObjectId
     folderId    String   @db.ObjectId
 
-    Workspace Workspace @relation(fields: [workspaceId], references: [id])
-    Folder    Folder    @relation(fields: [folderId], references: [id])
+    // Workspace Workspace @relation(fields: [workspaceId], references: [id])
+    // Folder    Folder    @relation(fields: [folderId], references: [id])
 
-    fileTags FileTag[]
+    // fileTags FileTag[]
 }
 
 model FileTag {
@@ -104,6 +127,64 @@ model FileTag {
     tagId     String   @db.ObjectId
     createdAt DateTime @default(now())
 
-    File File @relation(fields: [fileId], references: [id])
+    // File File @relation(fields: [fileId], references: [id])
     Tag  Tag  @relation(fields: [tagId], references: [id])
+}
+
+model Customer {
+    id               String  @id @default(auto()) @map("_id") @db.ObjectId
+    stripeCustomerId String?
+
+    // Optional: Relation to User if applicable
+    // userId          String? @db.ObjectId
+    // user            User?   @relation(fields: [userId], references: [id])
+}
+
+model Product {
+    id          String  @id @default(auto()) @map("_id") @db.ObjectId
+    active      Boolean
+    name        String?
+    description String?
+    image       String?
+    metadata    Json?
+    // prices Price[]
+}
+
+model Price {
+    id              String               @id @default(auto()) @map("_id") @db.ObjectId
+    productId       String?              @db.ObjectId
+    // product         Product?             @relation(fields: [productId], references: [id])
+    active          Boolean?
+    description     String?
+    unitAmount      Int
+    currency        String?
+    type            PricingType?
+    interval        PricingPlanInterval?
+    intervalCount   Int?
+    trialPeriodDays Int?
+    metadata        Json?
+
+    // subscriptions Subscription[]
+}
+
+model Subscription {
+    id                 String              @id @default(auto()) @map("_id") @db.ObjectId
+    userId             String              @db.ObjectId
+    status             SubscriptionStatus?
+    metadata           Json?
+    priceId            String?             @db.ObjectId
+    // price              Price?              @relation(fields: [priceId], references: [id])
+    quantity           Int?
+    cancelAtPeriodEnd  Boolean?
+    created            DateTime            @default(now())
+    currentPeriodStart DateTime            @default(now())
+    currentPeriodEnd   DateTime            @default(now())
+    endedAt            DateTime?
+    cancelAt           DateTime?
+    canceledAt         DateTime?
+    trialStart         DateTime?
+    trialEnd           DateTime?
+
+    // Optional: Relation to User if needed
+    // user User @relation(fields: [userId], references: [id])
 }

@@ -7,6 +7,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import { ModeToggle } from "@/components/ui/ModelToggle"
 import { Separator } from "@/components/ui/separator"
 import {
     SidebarInset,
@@ -20,16 +21,12 @@ export default async function LoggedInLayout({
 }: Readonly<{
     children: React.ReactNode
 }>) {
-    const session = await getSession()
-    if (!session) {
-        redirect("/login")
-    }
     return (
         <SidebarProvider>
             <AppSidebar />
             <SidebarInset>
-                <header className=" flex h-16 shrink-0 items-center gap-2">
-                    <div className="flex items-center gap-2 px-4">
+                <header className=" flex h-16 shrink-0 items-center gap-2 justify-between px-4">
+                    <div className="flex items-center gap-2 ">
                         <SidebarTrigger className="-ml-1" />
                         <Separator
                             orientation="vertical"
@@ -51,6 +48,7 @@ export default async function LoggedInLayout({
                             </BreadcrumbList>
                         </Breadcrumb>
                     </div>
+                    <ModeToggle />
                 </header>
                 <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
                     {/* <div className="grid auto-rows-min gap-4 md:grid-cols-3">

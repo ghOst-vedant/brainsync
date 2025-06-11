@@ -1,4 +1,5 @@
-import { User } from "@/store/useAuthStore"
+"use client"
+
 import React from "react"
 import {
     Card,
@@ -7,6 +8,7 @@ import {
     CardHeader,
     CardTitle,
 } from "../ui/card"
+import { User } from "@/lib/schema.types"
 interface DashboardSetupProps {
     user: User
     subsciption: {} | null
