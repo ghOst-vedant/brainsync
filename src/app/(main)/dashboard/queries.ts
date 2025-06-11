@@ -1,7 +1,9 @@
 "use server"
 
+import { CreateWorkspaceDB } from "@/lib/definitions"
 import { db } from "@/lib/prisma"
 import { getSession } from "@/lib/session"
+import { z } from "zod"
 
 export const getLoggedInWokspace = async (userId: string) => {
     try {
@@ -29,13 +31,13 @@ export const getSubscriptionDetails = async (userId: string) => {
             },
         })
         if (!subscription) {
-            throw new Error("No subscription found for the user")
+            return { data: null, error: null }
         }
-        return subscription
+        return { data: subscription, error: null }
     } catch (error) {
         console.log("Error fetching subscription: ", error)
 
-        return null
+        return { data: null, error: error }
     }
 }
 
@@ -55,3 +57,28 @@ export const getUserDetails = async (userId: string) => {
         return
     }
 }
+
+export const createWorkspace = async (
+    values: z.infer<typeof CreateWorkspaceDB>
+) => {
+    try {
+        const { workspaceName, emoji, logo, userId } = values
+        const session = await getSession()
+        if (!session) {
+            throw new Error("User not authenticated")
+        }
+        const workspace = await db.workspace.create({
+            data: {
+                title: workspaceName,
+                iconId: emoji,
+                logo,
+                workspaceOwner: userId,
+            },
+        })
+        return { data: workspace, error: null }
+    } catch (error) {
+        console.log("Error creating workspace: ", error)
+        return { data: null, error: error }
+    }
+}
+

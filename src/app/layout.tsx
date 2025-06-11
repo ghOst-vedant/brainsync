@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Raleway } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "next-themes"
+import { Toaster } from "sonner"
 
 const inter = Raleway({
     variable: "--font-raleway",
@@ -22,6 +23,7 @@ export default function RootLayout({
             <body className={`antialiased ${inter.className}`}>
                 <ThemeProvider attribute={"class"} enableSystem>
                     {children}
+                    <Toaster />
                 </ThemeProvider>
             </body>
         </html>

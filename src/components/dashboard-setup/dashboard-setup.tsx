@@ -13,12 +13,13 @@ import { Emoji } from "emoji-picker-react"
 import EmojiPicker from "../global/emoji-picker"
 import { Label } from "../ui/label"
 import { Input } from "../ui/input"
-import { Field, FieldValues, useForm } from "react-hook-form"
+import { Field, FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { z } from "zod"
 import { CreateWorkspaceFormSchema } from "@/lib/definitions"
 import { Button } from "../ui/button"
 import Loader from "../global/Loader"
 import { UploadButton } from "@/lib/uploadThing"
+import { createWorkspace } from "@/app/(main)/dashboard/queries"
 interface DashboardSetupProps {
     user: User
     subscription: Subscription | null
@@ -29,6 +30,8 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
     subscription,
 }) => {
     const [selectedEmoji, setSelectedEmoji] = useState("💼")
+    const [uploading, setUploading] = useState(false)
+    const [Logo, setLogo] = useState<string>("")
     const {
         register,
         handleSubmit,
@@ -41,7 +44,25 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
             workspaceName: "",
         },
     })
-
+    const onSubmit: SubmitHandler<
+        z.infer<typeof CreateWorkspaceFormSchema>
+    > = async (data) => {
+        setUploading(true)
+        try {
+            const workspace = await createWorkspace({
+                workspaceName: data.workspaceName,
+                emoji: selectedEmoji,
+                logo: Logo,
+                userId: user.id,
+            })
+            console.log("Workspace Created: ", workspace)
+        } catch (error) {
+            console.error("Error creating workspace:", error)
+        } finally {
+            setUploading(false)
+            reset()
+        }
+    }
     return (
         <Card className="w-[800px] sm:h-auto ">
             <CardHeader>
@@ -52,7 +73,7 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <form action="">
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex flex-col gap-4 ">
                         <div className="flex items-center gap-4 ">
                             <div className="text-5xl">
@@ -86,24 +107,24 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
                                 </small>
                             </div>
                         </div>
-                        <div>
-                            {" "}
+                        <div className="self-start">
                             <Label
                                 htmlFor="Logo"
                                 className="text-sm text-muted-foreground"
                             >
                                 Workspace Logo
                             </Label>
-                            <Input
-                                id="Logo"
-                                type="file"
-                                accept="image/*"
-                                placeholder="Logo"
-                                className="bg-transparent"
-                                disabled={isLoading}
-                                {...register("logo", {
-                                    required: "Workspace name is required",
-                                })}
+                            <UploadButton
+                                className="mt-2 ut-button:w-full ut-button:self-start ut-button:border ut-button:bg-transparent ut-button:px-4"
+                                endpoint="imageUploader"
+                                onClientUploadComplete={(res) => {
+                                    // Do something with the response
+                                    setLogo(res[0].ufsUrl)
+                                }}
+                                onUploadError={(error: Error) => {
+                                    // Do something with the error.
+                                    alert(`ERROR! ${error.message}`)
+                                }}
                             />
                             <small className="text-red-600">
                                 {errors?.logo?.message?.toString()}
@@ -114,12 +135,23 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
                                     on a Pro Plan
                                 </small>
                             )}
-                        </div>{" "}
-                        <div className=" border border-white rounded-xl px-4 py-2 flex items-center gap-2">
+                        </div>
+                        <div className="self-end">
                             {/* <Button disabled={isLoading} type="submit">
                                 {!isLoading ? "Create Workspace" : <Loader />}
                             </Button> */}
-                            <UploadButton
+                            <button
+                                type="submit"
+                                disabled={uploading || isLoading}
+                                className="text-white"
+                            >
+                                {uploading || isLoading ? (
+                                    <Loader />
+                                ) : (
+                                    "Create Workspace"
+                                )}
+                            </button>
+                            {/* <UploadButton
                                 endpoint="imageUploader"
                                 onClientUploadComplete={(res) => {
                                     // Do something with the response
@@ -130,7 +162,7 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
                                     // Do something with the error.
                                     alert(`ERROR! ${error.message}`)
                                 }}
-                            />
+                            /> */}
                         </div>
                     </div>
                 </form>

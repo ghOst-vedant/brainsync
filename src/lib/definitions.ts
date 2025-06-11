@@ -21,3 +21,7 @@ export const CreateWorkspaceFormSchema = z.object({
         .min(1, "Workspace name must be min of 1 character"),
     logo: z.any(),
 })
+export const CreateWorkspaceDB = CreateWorkspaceFormSchema.extend({
+    emoji: z.string(),
+    userId: z.string(),
+})
